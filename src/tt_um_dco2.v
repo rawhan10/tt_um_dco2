@@ -26,14 +26,7 @@ module tt_um_dco2 (
     assign dco_out = uo_out[0];
     assign uo_out[7:1] = 0;
 
-    module dco(
-    input        clk,
-    input        rst_n,
-    input        ena,
-    input  [7:0] dco_code,
-    output reg   dco_out
-);
-  
+
     wire [7:0] coarse;  
     assign coarse = dco_code[7:0];
 
