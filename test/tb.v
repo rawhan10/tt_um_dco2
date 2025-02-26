@@ -45,7 +45,7 @@ module tb ();
   );
  reg [7:0] dco_code;  
 
-  always @(*) ui_in = dco_code; // Fixed wire assignment issue
+   assign ui_in = dco_code; // Fixed wire assignment issue
   always #10 clk = ~clk;
   
   initial begin
