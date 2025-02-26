@@ -23,7 +23,7 @@ module tt_um_dco2 (
     reg dco_out;
 
     assign dco_code = ui_in;
-    assign dco_out = uo_out[0];
+    assign uo_out[0] = dco_out;
     assign uo_out[7:1] = 0;
 
 
