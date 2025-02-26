@@ -35,7 +35,7 @@ module tt_um_dco2 (
     reg [7:0] prev_period;
     reg fast_clk;  
     reg [3:0] fast_clk_div;
-    wire resetn = ~rst_n;
+    wire resetn = rst_n;
     
    
     always @(*) begin
