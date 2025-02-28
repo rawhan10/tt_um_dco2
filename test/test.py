@@ -17,7 +17,7 @@ async def test_project(dut):
     cocotb.start_soon(clock.start())
 
     # Reset Sequence
-    dut._log.info("Resetting Design")
+    dut._log.info("Applying Reset")
     dut.ena.value = 0
     dut.ui_in.value = 0
     dut.uio_in.value = 0
@@ -44,12 +44,5 @@ async def test_project(dut):
         dut._log.info(f"ui_in={val:08b}, Expected uo_out={expected_value:08b}, Actual uo_out={actual_value:08b}")
 
         assert actual_value == expected_value, f"Mismatch: ui_in={val:08b}, uo_out={actual_value:08b}"
-
-    # Test Reset Behavior Again
-    dut._log.info("Testing Reset Again")
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 5)
-    dut.rst_n.value = 1
-    await ClockCycles(dut.clk, 5)
 
     dut._log.info("Test Completed Successfully")
