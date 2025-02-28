@@ -8,33 +8,44 @@ from cocotb.triggers import ClockCycles
 
 @cocotb.test()
 async def test_project(dut):
+    """Cocotb test for tt_um_dco2"""
+
     dut._log.info("Start")
 
-    # Set the clock period to 10 us (100 KHz)
+    # Set the clock period to 10us (100KHz)
     clock = Clock(dut.clk, 10, units="us")
     cocotb.start_soon(clock.start())
 
-    # Reset
+    # Reset Sequence
     dut._log.info("Reset")
-    dut.ena.value = 1
+    dut.ena.value = 0
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
+    dut.ena.value = 1
 
-    dut._log.info("Test project behavior")
+    dut._log.info("Testing project behavior")
 
-    # Set the input values you want to test
-    dut.ui_in.value = 1
-    # dut.uio_in.value = 0
+    # Apply test values matching Verilog testbench
+    test_values = [0b00000000, 0b00000001, 0b00000010, 0b00000100,
+                   0b00001000, 0b00010000, 0b00100000, 0b01000000, 0b10000000]
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 32)
+    for val in test_values:
+        dut.ui_in.value = val
+        await ClockCycles(dut.clk, 32)
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 1
+        # Assertion: Modify this based on expected module behavior
+        expected_value = val  # Assuming uo_out should follow ui_in
+        assert dut.uo_out.value == expected_value, f"Mismatch: ui_in={val:08b}, uo_out={dut.uo_out.value:08b}"
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # Second Reset Cycle Test
+    dut._log.info("Testing Reset Behavior")
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 10)
+    dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 10)
+
+    # Final Log & Finish
+    dut._log.info("Test completed successfully.")
